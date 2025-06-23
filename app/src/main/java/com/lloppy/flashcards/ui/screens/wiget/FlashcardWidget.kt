@@ -1,4 +1,4 @@
-package com.lloppy.flashcards.ui.screens.widget
+package com.lloppy.flashcards.ui.screens.wiget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -18,30 +18,33 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.state.getAppWidgetState
+import androidx.glance.appwidget.state.updateAppWidgetState
+import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
+import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.lloppy.flashcards.di.appModule
+import com.lloppy.flashcards.data.FlashcardRepository
 import com.lloppy.flashcards.model.Flashcard
-import com.lloppy.flashcards.ui.screens.home.FlashcardViewModel
-import org.koin.android.ext.koin.androidContext
+import com.lloppy.flashcards.ui.screens.wiget.FlashcardWidget.Companion.IS_FLIPPED_KEY
 import org.koin.compose.koinInject
-import org.koin.core.context.GlobalContext
-import org.koin.core.context.startKoin
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 
 class FlashcardWidget : GlanceAppWidget() {
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        if (GlobalContext.getOrNull() == null) {
-            startKoin {
-                androidContext(context)
-                modules(appModule)
-            }
-        }
 
+    companion object {
+        val IS_FLIPPED_KEY = booleanPreferencesKey("is_flipped")
+    }
+
+    override var stateDefinition = PreferencesGlanceStateDefinition
+
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             WidgetContent()
         }
@@ -49,53 +52,48 @@ class FlashcardWidget : GlanceAppWidget() {
 
     @Composable
     private fun WidgetContent() {
-        val viewModel: FlashcardViewModel = koinInject()
+        val repository: FlashcardRepository = koinInject()
         var currentFlashcard by remember { mutableStateOf<Flashcard?>(null) }
-        var isFlipped by remember { mutableStateOf(false) }
+
+        val prefs = currentState<Preferences>()
+        val isFlipped = prefs[IS_FLIPPED_KEY] ?: false
 
         LaunchedEffect(Unit) {
-            currentFlashcard = viewModel.getDueFlashcardSync()
+            currentFlashcard = repository.getDueFlashcard()
         }
 
         GlanceTheme {
-
-                Box(
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .clickable(onClick = actionRunCallback<FlipCardAction>())
-                        .padding(8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (currentFlashcard != null) {
-                        if (isFlipped) {
-                            Text(
-                                text = currentFlashcard!!.backText,
-                                style = TextStyle(fontSize = 16.sp)
-                            )
-                        } else {
-                            Text(
-                                text = currentFlashcard!!.frontText,
-                                style = TextStyle(
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        }
-                    } else {
-                        Text(text = "No cards due")
-                    }
-                }
-
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .clickable(onClick = actionRunCallback<FlipCardAction>())
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                currentFlashcard?.let { flashcard ->
+                    Text(
+                        text = if (isFlipped) flashcard.backText else flashcard.frontText,
+                        style = TextStyle(
+                            fontSize = if (isFlipped) 16.sp else 18.sp,
+                            fontWeight = if (isFlipped) FontWeight.Normal else FontWeight.Bold
+                        )
+                    )
+                } ?: Text(text = "No cards due")
+            }
         }
     }
 }
 
 class FlipCardAction : ActionCallback {
-    override suspend fun onAction(
-        context: Context,
-        glanceId: GlanceId,
-        parameters: ActionParameters,
-    ) {
+    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+        val prefs = getAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId)
+        val currentFlipped = prefs[IS_FLIPPED_KEY] ?: false
+
+        updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { prefs ->
+            prefs.toMutablePreferences().apply {
+                set(IS_FLIPPED_KEY, !currentFlipped)
+            }
+        }
         FlashcardWidget().update(context, glanceId)
     }
 }
