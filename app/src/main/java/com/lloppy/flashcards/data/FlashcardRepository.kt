@@ -9,4 +9,9 @@ interface FlashcardRepository {
     suspend fun update(flashcard: Flashcard)
     suspend fun delete(flashcard: Flashcard)
     suspend fun getDueFlashcard(): Flashcard?
+
+    suspend fun getFlashcardById(id: Int): Flashcard
+
+    suspend fun markAsLearned(flashcard: Flashcard)
+    suspend fun markForRepeat(flashcard: Flashcard)
 }

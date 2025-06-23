@@ -22,6 +22,9 @@ interface FlashcardDao {
     @Query("SELECT * FROM flashcards ORDER BY nextReviewDue ASC")
     fun getAllFlashcards(): Flow<List<Flashcard>>
 
+    @Query("SELECT * FROM flashcards WHERE id == :id")
+    fun getById(id: Int): Flow<Flashcard>
+
     @Query("SELECT * FROM flashcards WHERE nextReviewDue <= :currentTime ORDER BY nextReviewDue ASC LIMIT 1")
     suspend fun getDueFlashcard(currentTime: Long): Flashcard?
 }

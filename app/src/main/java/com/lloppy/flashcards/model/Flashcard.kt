@@ -10,5 +10,6 @@ data class Flashcard(
     val backText: String,
     val category: String? = null,
     val lastReviewed: Long = System.currentTimeMillis(),
-    val nextReviewDue: Long = System.currentTimeMillis()
+    val nextReviewDue: Long = System.currentTimeMillis(),
+    val isLearned: Boolean = false
 )

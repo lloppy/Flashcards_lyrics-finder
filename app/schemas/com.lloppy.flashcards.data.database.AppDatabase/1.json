@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "30ad0cd0beaf80c106f27cc755e8fc5c",
+    "identityHash": "6ce56461af8d460e911b0c0e84deb65e",
     "entities": [
       {
         "tableName": "flashcards",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `frontText` TEXT NOT NULL, `backText` TEXT NOT NULL, `category` TEXT, `lastReviewed` INTEGER NOT NULL, `nextReviewDue` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `frontText` TEXT NOT NULL, `backText` TEXT NOT NULL, `category` TEXT, `lastReviewed` INTEGER NOT NULL, `nextReviewDue` INTEGER NOT NULL, `isLearned` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -42,6 +42,12 @@
             "columnName": "nextReviewDue",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "isLearned",
+            "columnName": "isLearned",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -54,7 +60,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '30ad0cd0beaf80c106f27cc755e8fc5c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6ce56461af8d460e911b0c0e84deb65e')"
     ]
   }
 }

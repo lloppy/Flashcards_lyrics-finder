@@ -34,4 +34,16 @@ class FlashcardViewModel(
     suspend fun getDueFlashcardSync(): Flashcard? {
         return repository.getDueFlashcard()
     }
+
+    fun markAsLearned(flashcard: Flashcard) {
+        viewModelScope.launch {
+            repository.markAsLearned(flashcard)
+        }
+    }
+
+    fun markForRepeat(flashcard: Flashcard) {
+        viewModelScope.launch {
+            repository.markForRepeat(flashcard)
+        }
+    }
 }

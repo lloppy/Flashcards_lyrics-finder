@@ -61,7 +61,6 @@ fun FlashcardApp(
             items(allFlashcards) { flashcard ->
                 FlashcardItem(
                     flashcard = flashcard,
-                    onDelete = { viewModel.delete(it) }
                 )
             }
         }
@@ -69,7 +68,7 @@ fun FlashcardApp(
 }
 
 @Composable
-fun FlashcardItem(flashcard: Flashcard, onDelete: (Flashcard) -> Unit) {
+fun FlashcardItem(flashcard: Flashcard) {
     var isFlipped by remember { mutableStateOf(false) }
 
     Card(
