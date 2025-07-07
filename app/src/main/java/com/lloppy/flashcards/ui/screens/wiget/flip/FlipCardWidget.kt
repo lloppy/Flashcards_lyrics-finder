@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
+import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.background
@@ -21,14 +22,15 @@ import com.lloppy.flashcards.model.Flashcard
 fun FlipCardWidget(
     flashcard: Flashcard?,
     isFlipped: Boolean,
-    modifier: GlanceModifier = GlanceModifier
+    action: Action = actionRunCallback<FlipCardAction>(),
+    modifier: GlanceModifier = GlanceModifier,
 ) {
     Box(
         modifier = modifier
             .height(130.dp)
             .padding(horizontal = 16.dp)
             .background(Color.Black.copy(alpha = 0.2f))
-            .clickable(onClick = actionRunCallback<FlipCardAction>()),
+            .clickable(onClick = action),
         contentAlignment = Alignment.Center
     ) {
         flashcard?.let { card ->

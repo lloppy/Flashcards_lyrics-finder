@@ -28,7 +28,7 @@ import com.lloppy.flashcards.model.Flashcard
 import com.lloppy.flashcards.ui.screens.wiget.flip.FlipCardWidget
 import com.lloppy.flashcards.ui.screens.wiget.learned.LearnedWidget
 import com.lloppy.flashcards.ui.screens.wiget.repeat.RepeatWidget
-import org.koin.compose.koinInject
+import org.koin.java.KoinJavaComponent.inject
 
 class FlashcardWidget : GlanceAppWidget() {
 
@@ -42,6 +42,7 @@ class FlashcardWidget : GlanceAppWidget() {
     }
 
     override var stateDefinition = PreferencesGlanceStateDefinition
+    val repository: FlashcardRepository by inject(FlashcardRepository::class.java)
 
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -52,7 +53,6 @@ class FlashcardWidget : GlanceAppWidget() {
 
     @Composable
     private fun WidgetContent() {
-        val repository: FlashcardRepository = koinInject()
         var currentFlashcard by remember { mutableStateOf<Flashcard?>(null) }
 
         val prefs = currentState<Preferences>()

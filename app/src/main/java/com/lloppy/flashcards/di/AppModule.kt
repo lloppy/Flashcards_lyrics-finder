@@ -4,6 +4,7 @@ import androidx.work.WorkManager
 import com.lloppy.flashcards.data.FlashcardRepository
 import com.lloppy.flashcards.data.database.AppDatabase
 import com.lloppy.flashcards.data.repository.FlashcardRepositoryImpl
+import com.lloppy.flashcards.data.repository.FlashcardRepositoryLogger
 import com.lloppy.flashcards.ui.screens.home.FlashcardViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -15,10 +16,13 @@ val appModule = module {
     single { get<AppDatabase>().flashcardDao() }
 
     // Repository
-    single<FlashcardRepository> { FlashcardRepositoryImpl(get()) }
+    single<FlashcardRepository> {
+        val realRepository = FlashcardRepositoryImpl(flashcardDao = get())
+        FlashcardRepositoryLogger(repository = realRepository)
+    }
 
     // ViewModel
-    viewModel { FlashcardViewModel(get()) }
+    viewModel { FlashcardViewModel(repository = get()) }
 
     // WorkManager
     single { WorkManager.getInstance(androidApplication()) }
