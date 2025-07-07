@@ -6,4 +6,5 @@ plugins {
 
     id("com.google.devtools.ksp") version "2.1.10-1.0.31" apply false
     id("androidx.room") version "2.7.1" apply false
+    alias(libs.plugins.android.library) apply false
 }

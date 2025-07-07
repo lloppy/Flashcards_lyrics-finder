@@ -7,26 +7,39 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.action.Action
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.provideContent
+import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.lloppy.flashcards.data.FlashcardRepository
-import com.lloppy.flashcards.model.Flashcard
-import com.lloppy.flashcards.ui.screens.wiget.flip.FlipCardWidget
-import com.lloppy.flashcards.ui.screens.wiget.learned.LearnedWidget
-import com.lloppy.flashcards.ui.screens.wiget.repeat.RepeatWidget
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
+import com.lloppy.flashcards.ui.screens.wiget.actions.FlipCardAction
+import com.lloppy.flashcards.ui.screens.wiget.actions.LearnedAction
+import com.lloppy.flashcards.ui.screens.wiget.actions.RepeatAction
+import com.lloppy.model.Flashcard
 import org.koin.java.KoinJavaComponent.inject
+import java.time.LocalDate
+import java.util.Date
 
 class FlashcardWidget : GlanceAppWidget() {
 
@@ -35,7 +48,7 @@ class FlashcardWidget : GlanceAppWidget() {
     }
 
     override var stateDefinition = PreferencesGlanceStateDefinition
-    private val repository: FlashcardRepository by inject(FlashcardRepository::class.java)
+    private val repository: com.lloppy.domain.FlashcardRepository by inject(com.lloppy.domain.FlashcardRepository::class.java)
 
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -79,3 +92,63 @@ class FlashcardWidget : GlanceAppWidget() {
     }
 }
 
+@Composable
+private fun FlipCardWidget(
+    flashcard: Flashcard?,
+    isFlipped: Boolean,
+    action: Action = actionRunCallback<FlipCardAction>(),
+    modifier: GlanceModifier = GlanceModifier,
+) {
+    Box(
+        modifier = modifier
+            .height(130.dp)
+            .padding(horizontal = 16.dp)
+            .background(Color.Black.copy(alpha = 0.2f))
+            .clickable(onClick = action),
+        contentAlignment = Alignment.Center
+    ) {
+        flashcard?.let { card ->
+            Text(
+                text = if (isFlipped) card.answer else card.question,
+                style = TextStyle(
+                    fontSize = if (isFlipped) 16.sp else 18.sp,
+                    fontWeight = if (isFlipped) FontWeight.Normal else FontWeight.Bold
+                )
+            )
+        } ?: Text(text = "No cards due")
+    }
+}
+
+@Composable
+private fun RepeatWidget(
+    action: Action = actionRunCallback<RepeatAction>(),
+    modifier: GlanceModifier = GlanceModifier,
+) {
+    Box(
+        modifier = modifier
+            .size(40.dp)
+            .background(Color.Red.copy(alpha = 0.2f))
+            .clickable(
+                onClick = action
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("❌", style = TextStyle(fontSize = 24.sp))
+    }
+}
+
+@Composable
+private fun LearnedWidget(
+    action: Action = actionRunCallback<LearnedAction>(),
+    modifier: GlanceModifier = GlanceModifier,
+) {
+    Box(
+        modifier = modifier
+            .size(40.dp)
+            .background(Color.Green.copy(alpha = 0.2f))
+            .clickable(onClick = action),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("✅", style = TextStyle(fontSize = 24.sp))
+    }
+}

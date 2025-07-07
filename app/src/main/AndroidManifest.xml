@@ -37,7 +37,7 @@
         </provider>
 
         <receiver
-            android:name=".ui.screens.wiget.FlashcardWidgetReceiver"
+            android:name=".ui.screens.wiget.receiver.FlashcardWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

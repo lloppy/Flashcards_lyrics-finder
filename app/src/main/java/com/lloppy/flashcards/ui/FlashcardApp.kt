@@ -27,7 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.lloppy.flashcards.model.Flashcard
+import com.lloppy.model.Flashcard
 import com.lloppy.flashcards.ui.screens.home.FlashcardViewModel
 import com.lloppy.flashcards.ui.screens.home.components.AddFlashcardDialog
 

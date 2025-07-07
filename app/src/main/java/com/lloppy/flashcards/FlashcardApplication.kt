@@ -2,7 +2,6 @@ package com.lloppy.flashcards
 
 import android.app.Application
 import com.lloppy.flashcards.di.appModule
-import com.lloppy.flashcards.ui.screens.wiget.FlashcardWidgetWorker
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin

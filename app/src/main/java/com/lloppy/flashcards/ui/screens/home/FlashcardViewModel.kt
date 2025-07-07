@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.lloppy.flashcards.data.FlashcardRepository
-import com.lloppy.flashcards.model.Flashcard
+import com.lloppy.domain.FlashcardRepository
+import com.lloppy.model.Flashcard
 import kotlinx.coroutines.launch
 
 class FlashcardViewModel(
