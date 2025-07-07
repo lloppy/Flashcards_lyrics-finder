@@ -21,7 +21,7 @@ class FlashcardRepositoryImpl(
 
     override suspend fun markAsLearned(flashcard: Flashcard) {
         val updatedFlashcard = flashcard.copy(
-            isLearned = true,
+            shouldShowAgain = false,
             lastReviewed = System.currentTimeMillis(),
             nextReviewDue = calculateNextReviewDate(true)
         )
@@ -30,7 +30,7 @@ class FlashcardRepositoryImpl(
 
     override suspend fun markForRepeat(flashcard: Flashcard) {
         val updatedFlashcard = flashcard.copy(
-            isLearned = false,
+            shouldShowAgain = true,
             lastReviewed = System.currentTimeMillis(),
             nextReviewDue = calculateNextReviewDate(false)
         )

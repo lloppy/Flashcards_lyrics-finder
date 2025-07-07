@@ -11,5 +11,5 @@ data class Flashcard(
     val category: String? = null,
     val lastReviewed: Long = System.currentTimeMillis(),
     val nextReviewDue: Long = System.currentTimeMillis(),
-    val isLearned: Boolean = false
+    val shouldShowAgain: Boolean = true
 )

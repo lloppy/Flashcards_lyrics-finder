@@ -56,7 +56,7 @@ class FlashcardWidget : GlanceAppWidget() {
                         id = -1,
                         question = "No cards due",
                         answer = "All cards have learned",
-                        isLearned = false
+                        shouldShowAgain = true
                     )
                 }
         }
