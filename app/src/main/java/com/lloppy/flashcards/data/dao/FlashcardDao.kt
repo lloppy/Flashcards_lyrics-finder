@@ -27,4 +27,7 @@ interface FlashcardDao {
 
     @Query("SELECT * FROM flashcards WHERE nextReviewDue <= :currentTime ORDER BY nextReviewDue ASC LIMIT 1")
     suspend fun getDueFlashcard(currentTime: Long): Flashcard?
+
+    @Query("SELECT * FROM flashcards WHERE isLearned == 0 LIMIT 1")
+    suspend fun getRandomAvailableFlashcard(): Flashcard?
 }

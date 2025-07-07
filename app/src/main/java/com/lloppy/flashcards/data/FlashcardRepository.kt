@@ -11,6 +11,7 @@ interface FlashcardRepository {
     suspend fun getDueFlashcard(): Flashcard?
 
     suspend fun getFlashcardById(id: Int): Flashcard
+    suspend fun getRandomAvailableFlashcard(): Flashcard?
 
     suspend fun markAsLearned(flashcard: Flashcard)
     suspend fun markForRepeat(flashcard: Flashcard)

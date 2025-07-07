@@ -16,6 +16,7 @@ class FlashcardRepositoryImpl(
     override suspend fun delete(flashcard: Flashcard) = flashcardDao.delete(flashcard)
     override suspend fun getDueFlashcard(): Flashcard? = flashcardDao.getDueFlashcard(System.currentTimeMillis())
     override suspend fun getFlashcardById(id: Int): Flashcard = flashcardDao.getById(id).first()
+    override suspend fun getRandomAvailableFlashcard(): Flashcard? = flashcardDao.getRandomAvailableFlashcard()
 
     override suspend fun markAsLearned(flashcard: Flashcard) {
         val updatedFlashcard = flashcard.copy(
