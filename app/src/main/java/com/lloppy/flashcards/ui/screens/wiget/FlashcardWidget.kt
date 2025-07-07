@@ -7,7 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -22,7 +21,6 @@ import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.lloppy.flashcards.R
 import com.lloppy.flashcards.data.FlashcardRepository
 import com.lloppy.flashcards.model.Flashcard
 import com.lloppy.flashcards.ui.screens.wiget.flip.FlipCardWidget
@@ -57,7 +55,7 @@ class FlashcardWidget : GlanceAppWidget() {
                     currentFlashcard = nonLearnedFlashcard ?: Flashcard(
                         id = -1,
                         question = "No cards due",
-                        answer = "",
+                        answer = "All cards have learned",
                         isLearned = false
                     )
                 }

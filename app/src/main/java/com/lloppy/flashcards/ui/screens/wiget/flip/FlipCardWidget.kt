@@ -2,7 +2,6 @@ package com.lloppy.flashcards.ui.screens.wiget.flip
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
@@ -17,7 +16,6 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.lloppy.flashcards.R
 import com.lloppy.flashcards.model.Flashcard
 
 @Composable
@@ -43,6 +41,6 @@ fun FlipCardWidget(
                     fontWeight = if (isFlipped) FontWeight.Normal else FontWeight.Bold
                 )
             )
-        } ?: Text(text = stringResource(R.string.no_cards_due))
+        } ?: Text(text = "No cards due")
     }
 }
