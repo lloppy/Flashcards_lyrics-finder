@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.first
 class FlashcardRepositoryImpl(
     private val flashcardDao: FlashcardDao
 ) : FlashcardRepository {
-    override val allFlashcards: Flow<List<Flashcard>> = flashcardDao.getAllFlashcards()
+    override val flashcardsFlow: Flow<List<Flashcard>> = flashcardDao.getAllFlashcards()
 
     override suspend fun insert(flashcard: Flashcard) = flashcardDao.insert(flashcard)
     override suspend fun update(flashcard: Flashcard) = flashcardDao.update(flashcard)
@@ -17,6 +17,7 @@ class FlashcardRepositoryImpl(
     override suspend fun getDueFlashcard(): Flashcard? = flashcardDao.getDueFlashcard(System.currentTimeMillis())
     override suspend fun getFlashcardById(id: Int): Flashcard = flashcardDao.getById(id).first()
     override suspend fun getRandomAvailableFlashcard(): Flashcard? = flashcardDao.getRandomAvailableFlashcard()
+    override fun getNonLearnedFlashcardFlow(): Flow<Flashcard?> = flashcardDao.getNonLearnedFlashcardFlow()
 
     override suspend fun markAsLearned(flashcard: Flashcard) {
         val updatedFlashcard = flashcard.copy(

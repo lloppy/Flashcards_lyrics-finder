@@ -11,14 +11,14 @@ class FlashcardRepositoryLogger(
     private val tag: String = "FlashcardRepository"
 ) : FlashcardRepository {
 
-    override val allFlashcards: Flow<List<Flashcard>> = repository.allFlashcards
+    override val flashcardsFlow: Flow<List<Flashcard>> = repository.flashcardsFlow
         .map { flashcards ->
             Log.d(tag, "Retrieved ${flashcards.size} flashcards")
             flashcards
         }
 
     override suspend fun insert(flashcard: Flashcard) {
-        Log.d(tag, "Inserting flashcard: ${flashcard.frontText.take(20)}...")
+        Log.d(tag, "Inserting flashcard: ${flashcard.question.take(20)}...")
         repository.insert(flashcard)
         Log.d(tag, "Flashcard inserted with id: ${flashcard.id}")
     }
@@ -39,7 +39,7 @@ class FlashcardRepositoryLogger(
         Log.d(tag, "Getting due flashcard")
         return repository.getDueFlashcard().also { flashcard ->
             if (flashcard != null) {
-                Log.d(tag, "Retrieved due flashcard: ${flashcard.frontText.take(20)}...")
+                Log.d(tag, "Retrieved due flashcard: ${flashcard.question.take(20)}...")
             } else {
                 Log.d(tag, "No due flashcards found")
             }
@@ -49,7 +49,7 @@ class FlashcardRepositoryLogger(
     override suspend fun getFlashcardById(id: Int): Flashcard {
         Log.d(tag, "Getting flashcard by id=$id")
         return repository.getFlashcardById(id).also {
-            Log.d(tag, "Retrieved flashcard: ${it.frontText.take(20)}...")
+            Log.d(tag, "Retrieved flashcard: ${it.question.take(20)}...")
         }
     }
 
@@ -57,21 +57,28 @@ class FlashcardRepositoryLogger(
         Log.d(tag, "Getting random available flashcard")
         return repository.getRandomAvailableFlashcard().also { flashcard ->
             if (flashcard != null) {
-                Log.d(tag, "Retrieved random flashcard: ${flashcard.frontText.take(20)}...")
+                Log.d(tag, "Retrieved random flashcard: ${flashcard.question.take(20)}...")
             } else {
                 Log.d(tag, "No available flashcards found")
             }
         }
     }
 
+    override fun getNonLearnedFlashcardFlow(): Flow<Flashcard?> {
+        Log.d(tag, "Getting non learned flashcards flow")
+        return repository.getNonLearnedFlashcardFlow().also {
+            Log.d(tag, "Retrieved random flashcard flow")
+        }
+    }
+
     override suspend fun markAsLearned(flashcard: Flashcard) {
-        Log.d(tag, "Marking flashcard id=${flashcard.id} as learned")
+        Log.d(tag, "Marking flashcard id=${flashcard.id} ${flashcard.question} as learned")
         repository.markAsLearned(flashcard)
         Log.d(tag, "Flashcard marked as learned")
     }
 
     override suspend fun markForRepeat(flashcard: Flashcard) {
-        Log.d(tag, "Marking flashcard id=${flashcard.id} for repeat")
+        Log.d(tag, "Marking flashcard id=${flashcard.id} ${flashcard.question} for repeat")
         repository.markForRepeat(flashcard)
         Log.d(tag, "Flashcard marked for repeat")
     }

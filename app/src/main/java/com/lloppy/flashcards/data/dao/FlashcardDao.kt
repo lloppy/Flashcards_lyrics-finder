@@ -30,4 +30,7 @@ interface FlashcardDao {
 
     @Query("SELECT * FROM flashcards WHERE isLearned == 0 LIMIT 1")
     suspend fun getRandomAvailableFlashcard(): Flashcard?
+
+    @Query("SELECT * FROM flashcards WHERE isLearned == 0")
+    fun getNonLearnedFlashcardFlow(): Flow<Flashcard?>
 }

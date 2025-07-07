@@ -1,12 +1,15 @@
 package com.lloppy.flashcards.ui.screens.wiget
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import kotlinx.coroutines.MainScope
 
 class FlashcardWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = FlashcardWidget()
-    private val coroutineScope = MainScope()
 
-
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        FlashcardWidgetWorker.enqueueUpdate(context)
+    }
 }

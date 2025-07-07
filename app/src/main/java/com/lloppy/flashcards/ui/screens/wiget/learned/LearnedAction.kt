@@ -5,20 +5,24 @@ import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
 import com.lloppy.flashcards.data.FlashcardRepository
+import com.lloppy.flashcards.ui.screens.wiget.FlashcardCommand
 import com.lloppy.flashcards.ui.screens.wiget.FlashcardWidget
-import com.lloppy.flashcards.util.Logger
 import org.koin.java.KoinJavaComponent.inject
 
-class LearnedAction: ActionCallback {
-    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+class LearnedAction : ActionCallback {
+    private val command: FlashcardCommand by lazy {
         val repository: FlashcardRepository by inject(FlashcardRepository::class.java)
+        LearnedCommand(repository)
+    }
 
-        val flashcard = repository.getDueFlashcard()
-        if (flashcard != null) {
-            repository.markAsLearned(flashcard)
+    // обновляем при команде
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters,
+    ) {
+        if (command.execute(context, glanceId)) {
+            FlashcardWidget().update(context, glanceId)
         }
-
-        Logger.makeLog("LearnedAction")
-        FlashcardWidget().update(context, glanceId)
     }
 }

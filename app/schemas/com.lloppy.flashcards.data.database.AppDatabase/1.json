@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6ce56461af8d460e911b0c0e84deb65e",
+    "identityHash": "5b4dc9c7b664674ec1e23d0d1f08e2b8",
     "entities": [
       {
         "tableName": "flashcards",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `frontText` TEXT NOT NULL, `backText` TEXT NOT NULL, `category` TEXT, `lastReviewed` INTEGER NOT NULL, `nextReviewDue` INTEGER NOT NULL, `isLearned` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `category` TEXT, `lastReviewed` INTEGER NOT NULL, `nextReviewDue` INTEGER NOT NULL, `isLearned` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,14 +15,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "frontText",
-            "columnName": "frontText",
+            "fieldPath": "question",
+            "columnName": "question",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "backText",
-            "columnName": "backText",
+            "fieldPath": "answer",
+            "columnName": "answer",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -60,7 +60,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6ce56461af8d460e911b0c0e84deb65e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b4dc9c7b664674ec1e23d0d1f08e2b8')"
     ]
   }
 }

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class FlashcardViewModel(
     private val repository: FlashcardRepository,
 ) : ViewModel() {
-    val allFlashcards: LiveData<List<Flashcard>> = repository.allFlashcards.asLiveData()
+    val allFlashcards: LiveData<List<Flashcard>> = repository.flashcardsFlow.asLiveData()
     val dueFlashcard = MutableLiveData<Flashcard?>()
 
     fun insert(flashcard: Flashcard) = viewModelScope.launch {

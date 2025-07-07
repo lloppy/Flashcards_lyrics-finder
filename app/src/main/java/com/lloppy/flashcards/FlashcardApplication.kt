@@ -19,6 +19,6 @@ class FlashcardApplication : Application() {
         }
 
         // Schedule periodic widget updates
-        FlashcardWidgetWorker.enqueueUpdate(this)
+        // FlashcardWidgetWorker.enqueueUpdate(this)
     }
 }

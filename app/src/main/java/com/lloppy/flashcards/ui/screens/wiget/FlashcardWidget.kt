@@ -7,11 +7,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.appwidget.GlanceAppWidget
@@ -23,6 +22,7 @@ import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import com.lloppy.flashcards.R
 import com.lloppy.flashcards.data.FlashcardRepository
 import com.lloppy.flashcards.model.Flashcard
 import com.lloppy.flashcards.ui.screens.wiget.flip.FlipCardWidget
@@ -32,17 +32,12 @@ import org.koin.java.KoinJavaComponent.inject
 
 class FlashcardWidget : GlanceAppWidget() {
 
-    companion object {
+    companion object WidgetKeys {
         val IS_FLIPPED_KEY = booleanPreferencesKey("is_flipped")
-
-        val noteId = longPreferencesKey("noteId")
-        val noteTitle = stringPreferencesKey("noteTitle")
-        val noteText = stringPreferencesKey("noteText")
-        val noteUpdatedAt = stringPreferencesKey("noteUpdatedAt")
     }
 
     override var stateDefinition = PreferencesGlanceStateDefinition
-    val repository: FlashcardRepository by inject(FlashcardRepository::class.java)
+    private val repository: FlashcardRepository by inject(FlashcardRepository::class.java)
 
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -54,12 +49,18 @@ class FlashcardWidget : GlanceAppWidget() {
     @Composable
     private fun WidgetContent() {
         var currentFlashcard by remember { mutableStateOf<Flashcard?>(null) }
-
         val prefs = currentState<Preferences>()
-        val isFlipped = prefs[IS_FLIPPED_KEY] ?: false
 
         LaunchedEffect(Unit) {
-            currentFlashcard = repository.getRandomAvailableFlashcard()
+            repository.getNonLearnedFlashcardFlow()
+                .collect { nonLearnedFlashcard ->
+                    currentFlashcard = nonLearnedFlashcard ?: Flashcard(
+                        id = -1,
+                        question = "No cards due",
+                        answer = "",
+                        isLearned = false
+                    )
+                }
         }
 
         Row(
@@ -73,9 +74,10 @@ class FlashcardWidget : GlanceAppWidget() {
             RepeatWidget()
             FlipCardWidget(
                 flashcard = currentFlashcard,
-                isFlipped = isFlipped
+                isFlipped = prefs[IS_FLIPPED_KEY] ?: false
             )
             LearnedWidget()
         }
     }
 }
+

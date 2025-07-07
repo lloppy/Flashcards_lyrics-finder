@@ -25,9 +25,11 @@ class FlashcardWidgetWorker(
     }
 
     companion object {
+        private const val UPDATE_DELAY_HOURS = 1L
+
         fun enqueueUpdate(context: Context) {
             val workRequest = OneTimeWorkRequestBuilder<FlashcardWidgetWorker>()
-                .setInitialDelay(1, TimeUnit.HOURS)
+                .setInitialDelay(UPDATE_DELAY_HOURS, TimeUnit.HOURS)
                 .build()
 
             WorkManager.getInstance(context).enqueueUniqueWork(

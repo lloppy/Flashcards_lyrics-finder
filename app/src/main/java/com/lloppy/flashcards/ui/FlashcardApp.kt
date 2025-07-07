@@ -51,7 +51,7 @@ fun FlashcardApp(
             AddFlashcardDialog(
                 onDismiss = { showAddDialog = false },
                 onConfirm = { front, back ->
-                    viewModel.insert(Flashcard(frontText = front, backText = back))
+                    viewModel.insert(Flashcard(question = front, answer = back))
                     showAddDialog = false
                 }
             )
@@ -86,12 +86,12 @@ fun FlashcardItem(flashcard: Flashcard) {
         ) {
             if (isFlipped) {
                 Text(
-                    text = flashcard.backText,
+                    text = flashcard.answer,
                     style = MaterialTheme.typography.bodyLarge
                 )
             } else {
                 Text(
-                    text = flashcard.frontText,
+                    text = flashcard.question,
                     style = MaterialTheme.typography.headlineSmall
                 )
             }

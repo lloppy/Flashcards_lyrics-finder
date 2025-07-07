@@ -1,6 +1,7 @@
 package com.lloppy.flashcards.ui.screens.wiget.repeat
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +25,9 @@ fun RepeatWidget(
         modifier = modifier
             .size(40.dp)
             .background(Color.Red.copy(alpha = 0.2f))
-            .clickable(onClick = action),
+            .clickable(
+                onClick = action
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text("❌", style = TextStyle(fontSize = 24.sp))
