@@ -9,5 +9,5 @@ data class Flashcard(
     val category: String? = null,
     val lastReviewed: Date = Date(),
     val nextReviewDue: Date = Date(),
-    val shouldShowAgain: Boolean = true
+    val shouldShowAgain: Boolean = true,
 )

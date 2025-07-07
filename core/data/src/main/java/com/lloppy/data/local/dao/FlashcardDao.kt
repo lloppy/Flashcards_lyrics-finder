@@ -22,15 +22,15 @@ interface FlashcardDao {
     @Query("SELECT * FROM flashcards ORDER BY nextReviewDue ASC")
     fun getAllFlashcards(): Flow<List<FlashcardEntity>>
 
-    @Query("SELECT * FROM flashcards WHERE id == :id")
+    @Query("SELECT * FROM flashcards WHERE id = :id")
     fun getById(id: Int): Flow<FlashcardEntity>
 
     @Query("SELECT * FROM flashcards WHERE nextReviewDue <= :currentTime ORDER BY nextReviewDue ASC LIMIT 1")
     suspend fun getDueFlashcard(currentTime: Long): FlashcardEntity?
 
-    @Query("SELECT * FROM flashcards WHERE shouldShowAgain == 1 LIMIT 1")
+    @Query("SELECT * FROM flashcards WHERE shouldShowAgain = 1 LIMIT 1")
     suspend fun getRandomAvailableFlashcard(): FlashcardEntity?
 
-    @Query("SELECT * FROM flashcards WHERE shouldShowAgain == 1")
+    @Query("SELECT * FROM flashcards WHERE shouldShowAgain = 1 LIMIT 1")
     fun getNonLearnedFlashcardFlow(): Flow<FlashcardEntity?>
 }

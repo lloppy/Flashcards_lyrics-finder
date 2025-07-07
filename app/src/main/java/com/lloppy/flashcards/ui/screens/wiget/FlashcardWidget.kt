@@ -33,13 +33,12 @@ import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import com.lloppy.domain.FlashcardRepository
 import com.lloppy.flashcards.ui.screens.wiget.actions.FlipCardAction
 import com.lloppy.flashcards.ui.screens.wiget.actions.LearnedAction
 import com.lloppy.flashcards.ui.screens.wiget.actions.RepeatAction
 import com.lloppy.model.Flashcard
 import org.koin.java.KoinJavaComponent.inject
-import java.time.LocalDate
-import java.util.Date
 
 class FlashcardWidget : GlanceAppWidget() {
 
@@ -48,7 +47,7 @@ class FlashcardWidget : GlanceAppWidget() {
     }
 
     override var stateDefinition = PreferencesGlanceStateDefinition
-    private val repository: com.lloppy.domain.FlashcardRepository by inject(com.lloppy.domain.FlashcardRepository::class.java)
+    private val repository: FlashcardRepository by inject(FlashcardRepository::class.java)
 
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -65,12 +64,7 @@ class FlashcardWidget : GlanceAppWidget() {
         LaunchedEffect(Unit) {
             repository.getNonLearnedFlashcardFlow()
                 .collect { nonLearnedFlashcard ->
-                    currentFlashcard = nonLearnedFlashcard ?: Flashcard(
-                        id = -1,
-                        question = "No cards due",
-                        answer = "All cards have learned",
-                        shouldShowAgain = true
-                    )
+                    currentFlashcard = nonLearnedFlashcard
                 }
         }
 

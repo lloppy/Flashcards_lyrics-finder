@@ -7,6 +7,7 @@ import com.lloppy.model.Flashcard
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import java.util.Date
 
 class FlashcardRepositoryImpl(
@@ -24,9 +25,7 @@ class FlashcardRepositoryImpl(
 
     override fun getNonLearnedFlashcardFlow(): Flow<Flashcard?> =
         flashcardDao.getNonLearnedFlashcardFlow()
-            .map { entity ->
-                entity?.let(mapper::toDomain)
-            }
+            .map { entity -> entity?.let(mapper::toDomain) }
 
     // ==================== CRUD Operations ====================
 
