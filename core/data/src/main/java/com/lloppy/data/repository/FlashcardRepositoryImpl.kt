@@ -1,19 +1,61 @@
 package com.lloppy.data.repository
 
+import android.util.Log
 import com.lloppy.data.local.dao.FlashcardDao
 import com.lloppy.data.mapper.FlashcardMapper
+import com.lloppy.data.remote.vk.VKMusicApi
 import com.lloppy.domain.FlashcardRepository
 import com.lloppy.model.Flashcard
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class FlashcardRepositoryImpl(
     private val flashcardDao: FlashcardDao,
-    private val mapper: FlashcardMapper
+    private val mapper: FlashcardMapper,
+    private val musicApi: VKMusicApi
 ) : FlashcardRepository {
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    init {
+        loadInitialData()
+    }
+
+    private fun loadInitialData() {
+        scope.launch {
+            try {
+                val audios = musicApi.getUserAudios("243548469")
+                if (audios.isEmpty()) {
+                    Log.w("FlashcardRepository", "No audio tracks found from VK")
+                    return@launch
+                }
+
+                // Преобразуем аудиозаписи в карточки и сохраняем
+                val flashcards = audios.map { audio ->
+                    Flashcard(
+                        question = audio.title,
+                        answer = audio.artist,
+                        lastReviewed = Date(),
+                        nextReviewDue = calculateNextReviewDate(false),
+                        shouldShowAgain = true
+                    )
+                }
+
+                    //                flashcardDao.insertAll(flashcards.map(mapper::toEntity))
+                Log.d("FlashcardRepository", "Loaded ${flashcards.size} flashcards from VK")
+
+            } catch (e: Exception) {
+                Log.e("FlashcardRepository", "Error loading data from VK", e)
+            }
+        }
+    }
+
 
     // ==================== Flow Operations ====================
 
@@ -85,7 +127,7 @@ class FlashcardRepositoryImpl(
 
     private fun createUpdatedFlashcard(
         original: Flashcard,
-        learned: Boolean
+        learned: Boolean,
     ): Flashcard {
         return original.copy(
             shouldShowAgain = !learned,

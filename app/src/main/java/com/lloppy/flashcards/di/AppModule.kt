@@ -3,6 +3,7 @@ package com.lloppy.flashcards.di
 import androidx.work.WorkManager
 import com.lloppy.data.local.AppDatabase
 import com.lloppy.data.mapper.FlashcardMapper
+import com.lloppy.data.remote.vk.VKMusicApi
 import com.lloppy.data.repository.FlashcardRepositoryImpl
 import com.lloppy.data.repository.FlashcardRepositoryLogger
 import com.lloppy.domain.FlashcardRepository
@@ -21,7 +22,8 @@ val appModule = module {
         val realRepository =
             FlashcardRepositoryImpl(
                 flashcardDao = get(),
-                mapper = FlashcardMapper()
+                mapper = FlashcardMapper(),
+                musicApi = VKMusicApi()
             )
         FlashcardRepositoryLogger(repository = realRepository)
     }

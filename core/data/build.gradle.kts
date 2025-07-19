@@ -48,6 +48,9 @@ dependencies {
     ksp("androidx.room:room-compiler:2.7.1")
     implementation("androidx.room:room-ktx:2.7.1")
 
+    // Jsoup
+    implementation("org.jsoup:jsoup:1.13.1")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
